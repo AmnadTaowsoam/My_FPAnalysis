@@ -4,7 +4,7 @@ import configparser
 import pandas as pd
 import datetime
 
-class FPDB():
+class FPDBB():
     parser = configparser.ConfigParser()
     parser.read('FPAnalysis.ini')
     SQL_driver = parser['myserv']['SQL_driver']
@@ -27,8 +27,8 @@ class FPDB():
             print('Conection successfully','(',datetime.datetime.now().strftime("%Y-%m-%d %H:%M"),')')
             
     ########################################################################
-    def create_fpanalysis_tbl(self):
-        create_fpanalysis_sql = """CREATE TABLE fpanalysis (
+    def create_fpbuffer_tbl(self):
+        create_fpbuffer_sql = """CREATE TABLE fpbuffer (
             ID int NOT NULL IDENTITY(1,1),
             c_inslots varchar(15), 
             c_sample varchar(15), 
@@ -88,18 +88,18 @@ class FPDB():
             """
         try:
             self.cursor = self.conn.cursor()
-            self.cursor.execute(create_fpanalysis_sql)
+            self.cursor.execute(create_fpbuffer_sql)
         except Exception as e:
             self.cursor.rollback()
             print(e)
-            print('create_fpanalysis_sql error','(',datetime.datetime.now().strftime('%Y-%m-%d %H:%M'),')')
+            print('create_fpbuffer_sql error','(',datetime.datetime.now().strftime('%Y-%m-%d %H:%M'),')')
         else:
-            print('create_fpanalysis_sql successful','(',datetime.datetime.now().strftime('%Y-%m-%d %H:%M'),')')
+            print('create_fpbuffer_sql successful','(',datetime.datetime.now().strftime('%Y-%m-%d %H:%M'),')')
             self.cursor.commit()
             self.cursor.close()
             
-    def insert_fpanalysis_tbl(self,data):
-        insert_fpanalysis_sql = """INSERT INTO fpanalysis (
+    def insert_fpbuffer_tbl(self,data):
+        insert_fpbuffer_sql = """INSERT INTO fpbuffer (
             c_inslots, 
             c_sample, 
             c_refsample, 
@@ -162,21 +162,21 @@ class FPDB():
         """
         try:
             self.cursor = self.conn.cursor()
-            self.cursor.execute(insert_fpanalysis_sql, data)
+            self.cursor.execute(insert_fpbuffer_sql, data)
         except Exception as e:
             self.cursor.rollback()
             print(e)
-            print('insert_fpanalysis_tbl error','(',datetime.datetime.now().strftime('%Y-%m-%d %H:%M'),')')
+            print('insert_fpbuffer_tbl error','(',datetime.datetime.now().strftime('%Y-%m-%d %H:%M'),')')
         else:
             self.cursor.commit()
             self.cursor.close()
             
-    def get_fpanalysis_tbl(self):
-        get_fpanalysis_sql = """SELECT * from fpanalysis
+    def get_fpbuffer_tbl(self):
+        get_fpbuffer_sql = """SELECT * from fpbuffer
         """
         try:
             self.cursor = self.conn.cursor()
-            self.cursor.execute(get_fpanalysis_sql)
+            self.cursor.execute(get_fpbuffer_sql)
             data = self.cursor.fetchall()
             data = pd.DataFrame((tuple(t) for t in data))
             data = data.rename(columns={
@@ -239,20 +239,20 @@ class FPDB():
         except Exception as e:
             self.cursor.rollback()
             print(e)
-            print('get_fpanalysis_tbl error','(',datetime.datetime.now().strftime('%Y-%m-%d %H:%M'),')')
+            print('get_fpbuffer_tbl error','(',datetime.datetime.now().strftime('%Y-%m-%d %H:%M'),')')
         else:
             self.cursor.commit()
             self.cursor.close()
             return  data
         
-    def truncate_fpanalysis_tbl(self):
-        truncate_fpanalysis_sql = """TRUNCATE TABLE fpanalysis"""
+    def truncate_fpbuffer_tbl(self):
+        truncate_fpbuffer_sql = """TRUNCATE TABLE fpbuffer"""
         try:
             self.cursor = self.conn.cursor()
-            self.cursor.execute(truncate_fpanalysis_sql)
+            self.cursor.execute(truncate_fpbuffer_sql)
         except Exception as ex:
             print(ex)
-            print('truncate_fpanalysis error','(',datetime.datetime.now().strftime('%Y-%m-%d %H:%M'),')')
+            print('truncate_fpbuffer error','(',datetime.datetime.now().strftime('%Y-%m-%d %H:%M'),')')
         else:
             self.cursor.commit()
             self.cursor.close()
