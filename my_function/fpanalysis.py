@@ -33,10 +33,36 @@ class Processing():
         data_a = self.get_data_bufferDB()
         data = pd.concat([data_a,data_a]).drop_duplicates(keep=False)
         return data
+    
+    def columns_detype(self):
+        try:
+            data = self.check_exit_DB()
+            col_str = ['c_inslots', 'c_sample', 'c_refsample', 'c_oldcode', 'c_material', 'c_truckno',\
+                'c_pelletno', 'c_Batch', 'c_formula','c_bins','c_loadtime','c_plant', 'c_Remark', 'c_ud']
+            col_num = ['n_EXCPTCP','n_MINCP','n_DIFFCP','n_DIFFMIN','n_MOIS','n_ASH','n_PROTEIN','n_FAT','n_FIBER',\
+                        'n_P','n_Ca','n_INSOL','n_NaCl','n_Na','n_K','n_Fines','n_Durability','n_T_FAT','n_Bulk_density',\
+                        'n_Aw','n_Starch','n_p_cook','n_L_star','n_a_star','n_b_star','n_Hardness','n_ADF',\
+                        'n_ADL','n_NDF','n_fp_nut1','n_fp_nut2','n_fp_nut3','n_fp_nut4','n_fp_nut5',\
+                        'n_fp_nut6','n_fp_nut7','n_fp_nut8','n_fp_nut9','n_fp_nut10']
+            col_list = ['c_inslots','c_sample','c_refsample', 'c_oldcode','c_material','c_truckno','c_pelletno','c_Batch',\
+                        'c_formula','d_date','n_EXCPTCP','n_MINCP','n_DIFFCP','n_DIFFMIN','n_MOIS','n_ASH',\
+                        'n_PROTEIN','n_FAT','n_FIBER','n_P','n_Ca','n_INSOL','n_NaCl','n_Na','n_K','n_Fines',\
+                        'n_Durability','n_T_FAT','n_Bulk_density','n_Aw','n_Starch','n_p_cook','n_L_star',\
+                        'n_a_star','n_b_star','n_Hardness','n_ADF','n_ADL','n_NDF','n_fp_nut1','n_fp_nut2',\
+                        'n_fp_nut3','n_fp_nut4','n_fp_nut5','n_fp_nut6','n_fp_nut7','n_fp_nut8','n_fp_nut9',\
+                        'n_fp_nut10','c_bins', 'c_loadtime','c_plant','c_Remark','c_ud']
+            data[col_str] = data[col_str].astype(pd.StringDtype())
+            data[col_num] = data[col_num].astype(float)
+            data = data[col_list]
+            data['n_DIFFCP'] = data['n_DIFFCP'].round(2)
+            data['n_DIFFMIN'] = data['n_DIFFMIN'].round(2)
+            return data
+        except:
+            print('data_prepare error','(',datetime.datetime.now().strftime('%Y-%m-%d %H:%M'),')')
             
     def update_fpanalysis(self):
         try:
-            fpa = self.check_exit_DB()
+            fpa = self.columns_detype()
             for i in range(len(fpa)):
                 fpas = fpa.values.tolist()
                 fpas = fpas[i][0],fpas[i][1],fpas[i][2],fpas[i][3],fpas[i][4],fpas[i][5],fpas[i][6],fpas[i][7],fpas[i][8],fpas[i][9],fpas[i][10],\
