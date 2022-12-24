@@ -6,6 +6,8 @@ Create FM analysis database
     mkdir documents
     cd documents
     mkdir fpanalysis
+    mkdir fpanalysis_complete
+    mkdir fpanalysis_pending
 
 ## Environment setup:
 
