@@ -1,11 +1,17 @@
 import datetime
-from my_function.fpanalysis import Processing
+from my_function.fpprepare import Prepare
 
-fpa = Processing()
+fpap = Prepare()
 
 if __name__=="__main__":
         try:
-            fpa.rma_processing()
-            print('Update all fp analysis successfully','(',datetime.datetime.now().strftime('%Y-%m-%d %H:%M'),')')
+            fpap.fpa_check_file_data()
+            print('Check file fp analysis successfully','(',datetime.datetime.now().strftime('%Y-%m-%d %H:%M'),')')
         except:
-            print('Update fp analysis error','(',datetime.datetime.now().strftime('%Y-%m-%d %H:%M'),')')
+            print('Check file fp analysis error','(',datetime.datetime.now().strftime('%Y-%m-%d %H:%M'),')')
+            
+        try:
+            fpap.fpa_upload_data_buffer()
+            print('fpa_upload_data_buffer successfully','(',datetime.datetime.now().strftime('%Y-%m-%d %H:%M'),')')
+        except:
+            print('fpa_upload_data_buffer error','(',datetime.datetime.now().strftime('%Y-%m-%d %H:%M'),')')
