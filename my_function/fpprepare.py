@@ -72,7 +72,6 @@ class Prepare():
                                     'c_Valuation Date',
                                     'c_CONCATENATE'
                             })
-            data = data.fillna(0)
             return data
         except:
             print('Columns rename error','(',datetime.datetime.now().strftime('%Y-%m-%d %H:%M'),')')
@@ -81,6 +80,7 @@ class Prepare():
         try:
             data = input_data.copy()
             data = input_data.replace("'", "")
+            data = input_data.replace('"', "")
             return data 
         except:
             print('Columns cleansing error','(',datetime.datetime.now().strftime('%Y-%m-%d %H:%M'),')')
@@ -89,6 +89,7 @@ class Prepare():
         try:
             data = input_data.copy()
             data[['n_fp_nut1','n_fp_nut2','n_fp_nut3','n_fp_nut4','n_fp_nut5','n_fp_nut6','n_fp_nut7','n_fp_nut8','n_fp_nut9','n_fp_nut10']] = 0
+            data = data.fillna(0)
             
             return data
         except:
@@ -117,7 +118,6 @@ class Prepare():
                         'n_fp_nut3','n_fp_nut4','n_fp_nut5','n_fp_nut6','n_fp_nut7','n_fp_nut8','n_fp_nut9',\
                         'n_fp_nut10','c_bins', 'c_loadtime','c_plant','c_Remark','c_ud']
             data = data[col_list]
-            data = data.drop(colums={'Unnamed: 0'})
             return data
         except:
             print('columns_detype error','(',datetime.datetime.now().strftime('%Y-%m-%d %H:%M'),')')
