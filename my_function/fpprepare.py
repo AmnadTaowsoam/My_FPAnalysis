@@ -2,6 +2,7 @@ import os,shutil
 import datetime
 import pandas as pd
 import numpy as np
+import re
 np.set_printoptions(suppress=True)
 
 import warnings
@@ -18,6 +19,7 @@ class Prepare():
     def columns_rename(self,input_data):
         try:
             data = input_data.copy()
+            data = data.drop(columns={'Unnamed: 0'})
             data = data.rename(columns={
                             'Inspection Lot':'c_inslots',
                             'Sample no':'c_sample',
@@ -72,6 +74,7 @@ class Prepare():
                                     'c_Valuation Date',
                                     'c_CONCATENATE'
                             })
+            data[['n_fp_nut1','n_fp_nut2','n_fp_nut3','n_fp_nut4','n_fp_nut5','n_fp_nut6','n_fp_nut7','n_fp_nut8','n_fp_nut9','n_fp_nut10']] = 0
             return data
         except:
             print('Columns rename error','(',datetime.datetime.now().strftime('%Y-%m-%d %H:%M'),')')
@@ -79,8 +82,18 @@ class Prepare():
     def columns_cleansing(self, input_data):
         try:
             data = input_data.copy()
-            data = input_data.replace("'", "")
-            data = input_data.replace('"', "")
+            col_num = ['n_EXCPTCP','n_MINCP','n_DIFFCP','n_DIFFMIN','n_MOIS','n_ASH','n_PROTEIN','n_FAT','n_FIBER',\
+                        'n_P','n_Ca','n_INSOL','n_NaCl','n_Na','n_K','n_Fines','n_Durability','n_T_FAT','n_Bulk_density',\
+                        'n_Aw','n_Starch','n_p_cook','n_L_star','n_a_star','n_b_star','n_Hardness','n_ADF',\
+                        'n_ADL','n_NDF','n_fp_nut1','n_fp_nut2','n_fp_nut3','n_fp_nut4','n_fp_nut5',\
+                        'n_fp_nut6','n_fp_nut7','n_fp_nut8','n_fp_nut9','n_fp_nut10']
+            chars_to_remove = ['.', '-', '(', ')', '"',' ',"'","' '","''","''"]
+            regular_expression = '[' + re.escape(''.join(chars_to_remove)) + ']'
+            data[col_num] = data[col_num].replace(regular_expression, '0', regex=True)
+            data = data.replace('รอผล', '0')
+            data = data.replace('ผล', '0')
+            data = data.replace('รอ', '0')
+            data = data.replace('ช', '0')
             return data 
         except:
             print('Columns cleansing error','(',datetime.datetime.now().strftime('%Y-%m-%d %H:%M'),')')
@@ -88,7 +101,6 @@ class Prepare():
     def columns_transform(self,input_data):
         try:
             data = input_data.copy()
-            data[['n_fp_nut1','n_fp_nut2','n_fp_nut3','n_fp_nut4','n_fp_nut5','n_fp_nut6','n_fp_nut7','n_fp_nut8','n_fp_nut9','n_fp_nut10']] = 0
             data = data.fillna(0)
             
             return data
@@ -109,7 +121,6 @@ class Prepare():
                         'n_ADL','n_NDF','n_fp_nut1','n_fp_nut2','n_fp_nut3','n_fp_nut4','n_fp_nut5',\
                         'n_fp_nut6','n_fp_nut7','n_fp_nut8','n_fp_nut9','n_fp_nut10']
             data[col_num] = data[col_num].astype(float)
-            
             col_list = ['c_inslots','c_sample','c_refsample', 'c_oldcode','c_material','c_truckno','c_pelletno','c_Batch',\
                         'c_formula','d_date','n_EXCPTCP','n_MINCP','n_DIFFCP','n_DIFFMIN','n_MOIS','n_ASH',\
                         'n_PROTEIN','n_FAT','n_FIBER','n_P','n_Ca','n_INSOL','n_NaCl','n_Na','n_K','n_Fines',\
@@ -144,7 +155,7 @@ class Prepare():
                         continue
                     print('\t%s' % fname)
                     # Read the Excel file into a dataframe
-                    fpanalysis_df = pd.read_excel(os.path.join(dirName, fname))
+                    fpanalysis_df = pd.read_excel(os.path.join(dirName, fname),sheet_name='Sheet1')
                     # Do something with the dataframe here
                     fpanalysis = self.fpa_transform(fpanalysis_df)
                     fpanalysis.to_excel("./documents/fpanalysis_pending/"+'C_' + fname )
@@ -153,9 +164,7 @@ class Prepare():
         except:
             print('Check file fpanalysis error','(',datetime.datetime.now().strftime('%Y-%m-%d %H:%M'),')')
 
-
-
-            
+        
 ######### Upload data to buffer ###########################
     def columns_detype_buffer(self,input_data):
         try:
@@ -179,6 +188,7 @@ class Prepare():
             data = data[col_list]
             data['n_DIFFCP'] = data['n_DIFFCP'].round(2)
             data['n_DIFFMIN'] = data['n_DIFFMIN'].round(2)
+            data['c_loadtime'] = data['c_loadtime'].str[:15]
             return data
         except:
             print('data_prepare error','(',datetime.datetime.now().strftime('%Y-%m-%d %H:%M'),')')
@@ -218,3 +228,48 @@ class Prepare():
                     # print('\t%s' % fname,':upload fpanalysis to buffer Successfully','(',datetime.datetime.now().strftime('%Y-%m-%d %H:%M'),')')
         except:
             print('upload fpanalysis to buffer error','(',datetime.datetime.now().strftime('%Y-%m-%d %H:%M'),')')
+
+
+### เตรียมไฟล์ เปลี่ยน Columns จากไฟล์ต้นฉบับ           
+class RAW_DATA_PRE():
+    def __init__(self) -> None:
+        pass
+    def recolumns(self,data_input):
+        data = data_input.copy()
+        data = data.drop(columns={'--'})
+        data[['ADF','ADL','NDF']] = ""
+        col_list = ['Inspection Lot','Sample no','Ref. Sample No.','Old Code','Material Code',\
+            'Material Description',	'Truck no.','Pallet No.','Batch No.','Formula','Date','EXCPTCP', 'MIN CP',\
+            'DIFF CP','DIFF MIN','MOIS','ASH','PROTEIN','FAT','FIBER','P','Ca','INSOL','NaCl','Na','K',\
+            'Fines','Durability','T_FAT','Bulk density','Aw','Starch','% cook','L*','a*','b*','Hardness',\
+            'ADF','ADL','NDF','ถัง','Load Time','Plant','Remark','Validation Code','Valuation Date','CONCATENATE'
+            ]
+        data = data[col_list]
+        data = data.fillna(0)
+        chars_to_remove = ['.', '-', '(', ')', '"',' ',"'","' '","''","''"]
+        regular_expression = '[' + re.escape(''.join(chars_to_remove)) + ']'
+        data[col_list] = data[col_list].replace(regular_expression, '0', regex=True)
+        data = data.replace('0', 0)
+        data = data[data['Inspection Lot'] != 0]
+        return data
+
+    def fpa_create_file_data(self):
+            try:
+                # Set the directory you want to start from
+                rootDir = './documents/raw_data_fp/'
+                for dirName, subdirList, fileList in os.walk(rootDir):
+                    print('Found directory: %s' % dirName)
+                    for fname in fileList:
+                        # Skip files that are not Excel
+                        if not fname.endswith('.xlsx'):
+                            continue
+                        print('\t%s' % fname)
+                        # Read the Excel file into a dataframe
+                        fpanalysis_raw = pd.read_excel(os.path.join(dirName, fname),sheet_name='Db_FP')
+                        # Do something with the dataframe here
+                        fpanalysis = self.recolumns(fpanalysis_raw)
+                        fpanalysis.to_excel("./documents/fpanalysis/"+'raw_' + fname  )
+                        shutil.move("./documents/raw_data_fp/"+ fname, "./documents/raw_data_after_pre/"+'ori_' + fname)
+                        print('\t%s' % fname,':Prepare raw file fpanalysis Successfully','(',datetime.datetime.now().strftime('%Y-%m-%d %H:%M'),')')
+            except:
+                print('Prepare raw file error','(',datetime.datetime.now().strftime('%Y-%m-%d %H:%M'),')')
