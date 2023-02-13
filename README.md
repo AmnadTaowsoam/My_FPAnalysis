@@ -8,6 +8,7 @@ Create FM analysis database
     mkdir fpanalysis
     mkdir fpanalysis_complete
     mkdir fpanalysis_pending
+    mkdir APIs_data
 
 ## Environment setup:
 
