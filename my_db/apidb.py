@@ -28,11 +28,11 @@ class APIFPDB():
             
     ########################################################################      
     def get_fpanalysis_tbl(self,plant,feedN):
-        get_fpanalysis_sql = """SELECT * from fpanalysis where (c_plant=? AND c_oldcode=?)
+        get_fpanalysis_sql = """SELECT * from fpanalysis WHERE c_plant like ? AND c_oldcode like ?
         """
         try:
             self.cursor = self.conn.cursor()
-            self.cursor.execute(get_fpanalysis_sql,plant,feedN)
+            self.cursor.execute(get_fpanalysis_sql,('%' + plant + '%','%' + feedN + '%',))
             data = self.cursor.fetchall()
             data = pd.DataFrame((tuple(t) for t in data))
             data = data.rename(columns={
