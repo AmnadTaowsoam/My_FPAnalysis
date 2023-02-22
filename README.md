@@ -18,3 +18,11 @@ Create FM analysis database
 library requirements:
 
     pip install -r requirements
+
+parameter
+###parameter = ['inslots','sample','refsample','feedN','material','truckno',\
+            'pelletno','Batch','formula','dates','EXCPTCP','MINCP','DIFFCP',\
+            'DIFFMIN','MOISTURE','ASH','PROTEIN','FAT','FIBER','P','Ca','INSOL',\
+            'NaCl','Na','K','Fines','Durability','T_FAT','Bulk_density','Aw',\
+            'starch','p_cook','L','a*','b*','Hardness','ADF','ADL','NDF','bins',\
+            'loadtime','plant','remark','ud']##
