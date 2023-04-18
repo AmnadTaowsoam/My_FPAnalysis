@@ -12,8 +12,8 @@ if __name__=="__main__":
         except:
             print('Upload rmanalysis to database error','(',datetime.datetime.now().strftime('%Y-%m-%d %H:%M'),')')
             
-        try:
-            dbb.truncate_fpbuffer_tbl()
-            print('truncate_rmbuffer_tbl database successfully','(',datetime.datetime.now().strftime('%Y-%m-%d %H:%M'),')')
-        except:
-            print('truncate_rmbuffer_tbl database error','(',datetime.datetime.now().strftime('%Y-%m-%d %H:%M'),')')
+        # try:
+        #     dbb.truncate_fpbuffer_tbl()
+        #     print('truncate_rmbuffer_tbl database successfully','(',datetime.datetime.now().strftime('%Y-%m-%d %H:%M'),')')
+        # except:
+        #     print('truncate_rmbuffer_tbl database error','(',datetime.datetime.now().strftime('%Y-%m-%d %H:%M'),')')

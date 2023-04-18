@@ -30,9 +30,11 @@ class Processing():
     
     def check_exit_DB(self):
         data_a = self.get_data_fpDB()
-        data_a = self.get_data_bufferDB()
-        data = pd.concat([data_a,data_a]).drop_duplicates(keep=False)
-        return data
+        data_b = self.get_data_bufferDB()
+        if data_b.equals(data_a):
+            return pd.DataFrame()
+        else:
+            return data_b
     
     def columns_detype(self):
         try:
