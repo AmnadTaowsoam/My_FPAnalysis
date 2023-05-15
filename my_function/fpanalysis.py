@@ -26,6 +26,7 @@ class Processing():
     def get_data_fpDB(self):
         data = db.get_fpanalysis_tbl()
         data = data.drop(columns={'ID'})
+        data = data.drop_duplicates()
         return data
     
     def check_exit_DB(self):

@@ -8,6 +8,7 @@ Create FM analysis database
     mkdir fpanalysis
     mkdir fpanalysis_complete
     mkdir fpanalysis_pending
+    mkdir APIs_data
 
 ## Environment setup:
 
@@ -16,4 +17,16 @@ Create FM analysis database
 
 library requirements:
 
+<<<<<<< HEAD
     pip install -r requirements.txt
+=======
+    pip install -r requirements
+
+parameter
+###parameter = ['inslots','sample','refsample','feedN','material','truckno',\
+            'pelletno','Batch','formula','dates','EXCPTCP','MINCP','DIFFCP',\
+            'DIFFMIN','MOISTURE','ASH','PROTEIN','FAT','FIBER','P','Ca','INSOL',\
+            'NaCl','Na','K','Fines','Durability','T_FAT','Bulk_density','Aw',\
+            'starch','p_cook','L','a*','b*','Hardness','ADF','ADL','NDF','bins',\
+            'loadtime','plant','remark','ud']##
+>>>>>>> f03bd0776d7afeddb19fa20b0f6cbe96bcccbd6e
